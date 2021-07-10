@@ -1,0 +1,41 @@
+gcloud container clusters get-credentials --region us-central1 gke-cluster 
+
+kubectl get pods
+
+kubectl run nexus --image gcr.io/mohab-project-319200/nexus-image 
+
+
+kubectl describe pod nexus | grep  node
+
+
+kubectl apply -f nginx.yaml
+
+kubectl get deployment
+
+kubectl apply -f jenkins.yaml
+
+kubectl apply -f nexus.yaml
+
+
+# make jenkins permissions
+
+gcloud iam service-accounts create jenkins --display-name jenkins
+
+export SA_EMAIL=$(gcloud iam service-accounts list \
+    --filter="displayName:jenkins" --format='value(email)')
+export PROJECT=$(gcloud info --format='value(config.project)')
+
+# add roles
+gcloud projects add-iam-policy-binding $PROJECT \
+    --role roles/storage.admin --member serviceAccount:$SA_EMAIL
+gcloud projects add-iam-policy-binding $PROJECT --role roles/compute.instanceAdmin.v1 \
+    --member serviceAccount:$SA_EMAIL
+gcloud projects add-iam-policy-binding $PROJECT --role roles/compute.networkAdmin \
+    --member serviceAccount:$SA_EMAIL
+gcloud projects add-iam-policy-binding $PROJECT --role roles/compute.securityAdmin \
+    --member serviceAccount:$SA_EMAIL
+gcloud projects add-iam-policy-binding $PROJECT --role roles/iam.serviceAccountActor \
+    --member serviceAccount:$SA_EMAIL
+
+# doenload key
+gcloud iam service-accounts keys create jenkins-sa.json --iam-account $SA_EMAIL
