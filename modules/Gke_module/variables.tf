@@ -28,3 +28,9 @@ variable network{
 variable subnetwork{
   type        = string
 }
+variable ip_range_services_name{
+  type        = string
+}
+variable ip_range_pods_name{
+  type        = string
+}

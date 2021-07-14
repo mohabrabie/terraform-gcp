@@ -9,5 +9,8 @@ module "gke" {
   master_node_cidr = "10.1.0.0/16"
   gcr_location = data.google_container_registry_repository.container_registry.repository_url
   network = module.VPC.network_name
-  subnetwork = module.VPC.subnet_id
+  subnetwork = module.VPC.cluster_subnet_id
+  ip_range_pods_name = var.ip_range_pods_name
+  ip_range_services_name = var.ip_range_services_name
+#   module.VPC.subnet_id
 }

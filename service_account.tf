@@ -17,6 +17,12 @@ module "gs-role" {
    role = "roles/storage.objectViewer"
    Project = var.Project
 }
+module "gke-role" {
+  source = "./modules/Role_module"
+   account_email = module.vm-account.account_email
+   role = "roles/container.admin"
+   Project = var.Project
+}
 
 module "bq-role" {
   source = "./modules/Role_module"

@@ -5,14 +5,40 @@ resource "google_container_cluster" "cluster" {
   network = var.network
   subnetwork = var.subnetwork
   node_locations = var.cluster_zones_list
-
-  cluster_ipv4_cidr = var.master_node_cidr
+  default_max_pods_per_node = 20
+  # cluster_ipv4_cidr = var.master_node_cidr
   remove_default_node_pool = true
   initial_node_count       = var.number_of_nodes_per_zone
 
   cluster_autoscaling {
     enabled = false
     }
+    
+  private_cluster_config{
+    enable_private_nodes = true
+    enable_private_endpoint = true
+    master_ipv4_cidr_block  = "10.2.20.0/28"
+  }
+  master_authorized_networks_config{
+    cidr_blocks {
+      cidr_block = "10.0.0.0/24"
+      # "35.235.240.0/20"
+      display_name = "authorized_network"
+    }
+  }
+  ip_allocation_policy {
+    cluster_secondary_range_name  = var.ip_range_pods_name
+    services_secondary_range_name = var.ip_range_services_name
+  }
+  #   addons_config {
+  #   network_policy_config {
+  #     disabled = false
+  #   }
+  # }
+  network_policy {
+    enabled = true
+  }
+
 }
 
 resource "google_container_node_pool" "node-pool" {

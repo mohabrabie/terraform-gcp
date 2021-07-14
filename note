@@ -1,8 +1,42 @@
+#run terraform
+terraform init
+terraform apply --var-file=values.tfvars -auto-approve
+#connect to test-vm
+gcloud compute ssh --tunnel-through-iap test-vm  --zone us-central1-a
+#install kubectl
+sudo apt-get install kubectl
+#authorize with cluster
+gcloud container clusters get-credentials --region us-central1 gke-cluster
+nano nexus.yaml
+-> copy file 
+nano jenkins.yaml
+-> copy file
+#deploy pods
+kubectl apply -f jenkins.yaml
+kubectl apply -f nexus.yaml
+kubectl get deployment
+kubectl get pods
+# test cloud storage
+upload a file
+gsutil ls -r gs://gsbucket-100
+
+
+
+
+# connect to gke
 gcloud container clusters get-credentials --region us-central1 gke-cluster 
+
+\\\\\\\\\\
+sudo apt-get install kubectl
+\\\\\\\\\\
+
+#connect to vm through iap
+gcloud compute ssh --tunnel-through-iap test-vm  --zone us-central1-a
+
 
 kubectl get pods
 
-kubectl run nexus --image gcr.io/mohab-project-319200/nexus-image 
+kubectl run nexus --image gcr.io/mohab-project-319200/nexus-image
 
 
 kubectl describe pod nexus | grep  node
@@ -39,3 +73,11 @@ gcloud projects add-iam-policy-binding $PROJECT --role roles/iam.serviceAccountA
 
 # doenload key
 gcloud iam service-accounts keys create jenkins-sa.json --iam-account $SA_EMAIL
+
+
+
+
+#client ID gke
+839135651766-2sipl2fagh31ua1vunr19qk1uahnero3.apps.googleusercontent.com
+
+https://iap.googleapis.com/v1/oauth/clientIds/839135651766-2sipl2fagh31ua1vunr19qk1uahnero3.apps.googleusercontent.com:handleRedirect
